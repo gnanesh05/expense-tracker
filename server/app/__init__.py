@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from .routes import register_routes
 from .config import Config
 from .helper import mongo,jwt
@@ -9,5 +10,6 @@ def create_app():
     app.config.from_object(Config)
     mongo.init_app(app)
     jwt.init_app(app)
+    CORS(app)
     register_routes(app)
     return app

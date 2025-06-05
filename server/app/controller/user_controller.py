@@ -20,7 +20,8 @@ def register():
     if not username or not email or not password:
         return jsonify({"error":"Username , Email and password are required"}), 400
     
-    if mongo.db.users.find_one({email: email}):
+    print(email , mongo.db.users.find_one({email: email}))
+    if mongo.db.users.find_one({'email': email}):
         return jsonify({"error":"User already exist"}), 409
     
     hashed_password = generate_password_hash(password)
