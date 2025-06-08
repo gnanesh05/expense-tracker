@@ -10,4 +10,4 @@ def register_routes(app):
 
     app.register_blueprint(api, url_prefix='/api')
     app.register_blueprint(user_bp, url_prefix='/api/users')
-    app.register_blueprint(expense_bp, url_prefix='/api/expense')
+    app.register_blueprint(expense_bp, url_prefix='/api/expenses')

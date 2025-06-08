@@ -34,8 +34,10 @@ def register():
     return jsonify({
         "message": "User registered successfully",
         "user": {
+            "id" : str(result.inserted_id),
             "username": username,
-            "email": email
+            "email": email,
+            "budget":user.budget
         },
         "token": access_token
     }), 201
@@ -64,8 +66,28 @@ def login():
 
     return jsonify({
         "message": "User login successfully",
-        "token": access_token
+        "token": access_token,
+        "user":{"id":str(user.get('_id')),"username":user.get('username'),"email":user.get('email'),"budget":user.get('budget')}
     }), 201
+
+#update monthyly_budget
+@user_bp.route('/update_budget', methods=['PUT'])
+@jwt_required()
+def update_monthly_budget():
+    user_id =  get_jwt_identity() 
+
+    user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        return jsonify({"error": "Not Authorised"}), 401
+    
+    budget = request.args.get('budget')
+    print(budget)
+    if not budget:
+        return jsonify({"error":"Budget not found"}), 400
+    
+    mongo.db.users.update_one({'_id':ObjectId(user_id)},{'$set': {'budget': budget}})
+    return jsonify({"message":"monthly budget added"})
+
 
 #current_user
 @user_bp.route('/current_user', methods=['GET'])
@@ -75,12 +97,15 @@ def get_current_user():
     user_id =  get_jwt_identity() 
 
     user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+    print(user)
     if not user:
         return jsonify({"error": "User not found"}), 404
 
     user_data = {
+        "id": str(user.get("_id")),
         "username": user.get("username"),
-        "email": user.get("email")
+        "email": user.get("email"),
+        "budget":user.get('budget')
     }
 
     return jsonify({"user": user_data}), 200

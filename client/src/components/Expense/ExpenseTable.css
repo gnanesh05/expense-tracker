@@ -1,0 +1,70 @@
+.transaction-list {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.budget-details{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.budget-details h3{
+    
+}
+
+.expense-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.expense-table th,
+.expense-table td {
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.expense-table thead {
+  background-color: #f5f5f5;
+}
+
+.expense-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.positive {
+  color: green;
+  font-weight: bold;
+}
+
+.negative {
+  color: red;
+  font-weight: bold;
+}
+
+.edit-btn,
+.delete-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.delete-btn:hover {
+  color: red;
+}
+
+.edit-btn:hover {
+  color: #007bff;
+}
+
+.empty-text {
+  padding: 1rem;
+  text-align: center;
+  color: #666;
+}

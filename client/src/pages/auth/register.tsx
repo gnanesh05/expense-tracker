@@ -1,11 +1,13 @@
 import React,{useState} from 'react'
 import axios from '../../helper/data'
 import { useAuth } from '../../contexts/authContext';
+import { useNavigate } from 'react-router-dom';
 
-function Register() {
+function Register({setLoading}:{setLoading: React.Dispatch<React.SetStateAction<boolean>>}) {
     const[form, setForm] = useState({username:'',email:'', password:''});
     const [error, setError] = useState('');
     const{dispatch} = useAuth();
+    const navigate = useNavigate();
 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
         setForm((prev)=>({...prev,[e.target.name]: e.target.value}));
@@ -14,11 +16,16 @@ function Register() {
     const handleSubmit = async(e:React.FormEvent)=>{
         e.preventDefault();
         try {
+            setLoading(true)
             const res = await axios.post("/users/register", form);
-            dispatch({type:'LOGIN',payload:{token:res.data.token}})
-            alert('register success');
+            dispatch({type:'LOGIN',payload:{token:res.data.token, user: res.data.user}})
+            navigate('/')
+            setError('')
         } catch (error:any) {
             setError(error.response.data.error)
+        }
+        finally{
+            setLoading(false);
         }
     }
     return (
@@ -28,7 +35,7 @@ function Register() {
                 <label htmlFor='username'>
                     User Name
                 </label>
-                <input name='username' type='text' id='email' className='form-input' onChange={handleChange}  />
+                <input name='username' type='text' id='username' className='form-input' onChange={handleChange}  />
                 <label htmlFor="email">
                     Email
                 </label>

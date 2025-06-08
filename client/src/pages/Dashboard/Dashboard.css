@@ -1,0 +1,32 @@
+.expense-dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.form-section {
+  flex: 1;
+  width: 280px;
+  max-width: 350px;
+  background: #fefefe;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+}
+
+.transactions-section {
+  flex: 2;
+  min-width: 400px;
+}
+
+@media (max-width: 768px) {
+  .expense-dashboard {
+    flex-direction: column;
+  }
+
+  .form-section, .transactions-section {
+    width: 100%;
+    max-width: 100%;
+  }
+}

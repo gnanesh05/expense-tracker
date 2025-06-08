@@ -5,20 +5,23 @@ type User={
     id:string;
     username : string;
     email:string;
+    budget:string;
 }
 
 type AuthState={
     user: User|null;
     token:string|null;
     isAuthenticated:boolean;
+    loading: boolean;
 }
 
-type Action= {type:'LOGIN', payload:{token:string}} | {type:'SET_USER',payload:{user:User}}| {type:'LOGOUT'};
+type Action= {type:'LOGIN', payload:{token:string, user:User}} | {type:'SET_USER',payload:{user:User}}| {type:'LOGOUT'} | { type: 'SET_LOADING', payload: boolean };
 
 const intitalState:AuthState = {
     user : null,
-    token: null,
-    isAuthenticated: false
+    token: localStorage.getItem('token') || null,
+    isAuthenticated: false,
+    loading: true, 
 }
 
 const authReducer = (state:AuthState, action:Action): AuthState =>{
@@ -27,16 +30,24 @@ const authReducer = (state:AuthState, action:Action): AuthState =>{
             localStorage.setItem('token', action.payload.token);
             return {
                 ...state,
+                user: action.payload.user,
                 token: action.payload.token,
-                isAuthenticated: false,
+                isAuthenticated: true,
             }
         case 'SET_USER':
             return {
                 ...state,
                 user: action.payload.user,
+                isAuthenticated: true,
             }
         case 'LOGOUT':
+            localStorage.removeItem('token')
             return intitalState;
+        case 'SET_LOADING':
+            return {
+                ...state,
+                loading: action.payload,
+            }
         default:
             return state;
     }
@@ -54,23 +65,29 @@ export const AuthProvider = ({children}:{children: ReactNode}) =>{
 
     useEffect(()=>{
         const fetchUser = async()=>{
-            if(!state.token){
+            const storedToken = state.token || localStorage.getItem("token");
+            if (!storedToken){
+                dispatch({ type: 'SET_LOADING', payload: false });
                 return;
             }
+
             try{
                 const res = await axios.get('/users/current_user',{
                     headers:{
                         'Authorization':`Bearer ${state.token}`
                     },
                 });
-                dispatch({type:'SET_USER', payload:{user:res.data}});
+                dispatch({type:'SET_USER', payload:{user:res.data.user}});
             }
             catch(error){
                 dispatch({type:'LOGOUT'});
             }
+            finally {
+                dispatch({ type: 'SET_LOADING', payload: false });
+            }
         }
         fetchUser();
-    },[state.token]);
+    },[]);
 
     return (
         <AuthContext.Provider value={{state, dispatch}}>

@@ -3,9 +3,11 @@ import './index.css'
 import money from '../../assets/money.jpg'
 import Login from './login'
 import Register from './register';
+import Spinner from '../../components/Spinner';
 
 function Auth() {
     const [isLogin, setisLogin] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     return (
         <div className='auth-container'>
             <div className='img-container'>
@@ -22,13 +24,14 @@ function Auth() {
             
             </div>
             <div className="form-container">
-               { isLogin ?  <Login/> : <Register/>}
+               { isLogin ?  <Login setLoading={setIsLoading}/> : <Register setLoading={setIsLoading}/>}
                 <p className='navigator'>
                     {isLogin ? "Don't have an account yet?" : "Already have an account?"}
                     <a className='navigator-link' onClick={()=>setisLogin(prev=>!prev)}>
                         {isLogin ? "Register" : "Login"}
                     </a>
                 </p>
+                {isLoading && <Spinner loading={isLoading}/>}
             </div>
         </div>
     )
