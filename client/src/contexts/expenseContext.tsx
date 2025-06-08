@@ -13,14 +13,16 @@ type Expense = {
 type ExpenseState = {
     expenses : Expense[],
     total : number,
+    selectedExpense: Expense | null,
 }
 
 type Action = {type:'FETCH_EXPENSES', payload:{expenses:[]}} | {type:'ADD_EXPENSE', payload:{expense:Expense}} 
-| {type:'UPDATE_EXPENSE',payload:{expense:Expense}} | {type:'REMOVE_EXPENSE',payload:{id:string}}
+| {type:'UPDATE_EXPENSE',payload:{expense:Expense}} | {type:'REMOVE_EXPENSE',payload:{id:string}} | {type:'SET_SELECTED_EXPENSE', payload:{expense:Expense|null}}
 
 const initialState: ExpenseState = {
     expenses : [],
     total : 0,
+    selectedExpense: null,
 }
 
 const calculateTotal = (expenses:Expense[]):number=>{
@@ -30,6 +32,7 @@ const calculateTotal = (expenses:Expense[]):number=>{
     },0)
 }
 const expenseReducer = (state: ExpenseState,action:Action): ExpenseState =>{
+    let newExpenses = []
     switch(action.type){
         case 'FETCH_EXPENSES':
             return {
@@ -38,25 +41,35 @@ const expenseReducer = (state: ExpenseState,action:Action): ExpenseState =>{
                 total : calculateTotal(action.payload.expenses),
             }
         case 'ADD_EXPENSE':
+            newExpenses = [...state.expenses, action.payload.expense]
             return{
                 ...state,
-                expenses : [...state.expenses, action.payload.expense],
-                total : state.total + parseFloat(action.payload.expense.amount)
+                expenses : newExpenses,
+                total : calculateTotal(newExpenses)
             }
         case 'UPDATE_EXPENSE':
-            return {
-                ...state,
-                expenses: state.expenses.map((item)=>{
+            newExpenses = state.expenses.map((item)=>{
                     if(item.id === action.payload.expense.id){
                         return action.payload.expense
                     }
                     return item
-                })
-            }
-        case 'REMOVE_EXPENSE':
+                });
             return {
                 ...state,
-                expenses : state.expenses.filter((item)=>item.id !== action.payload.id)
+                expenses: newExpenses,
+                total : calculateTotal(newExpenses)
+            }
+        case 'REMOVE_EXPENSE':
+            newExpenses = state.expenses.filter((item)=>item.id !== action.payload.id);
+            return {
+                ...state,
+                expenses : newExpenses,
+                total: calculateTotal(newExpenses)
+            }
+        case 'SET_SELECTED_EXPENSE':
+            return{
+                ...state,
+                selectedExpense : action.payload.expense
             }
         default:
             return state

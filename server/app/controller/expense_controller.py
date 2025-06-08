@@ -1,6 +1,7 @@
 from flask import Blueprint,  request,jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from bson import ObjectId
+from pymongo import ReturnDocument
 from datetime import datetime, timezone
 from app.models.ExpenseModel import Expense
 from app.helper import mongo
@@ -19,7 +20,7 @@ def get_expenses():
     expenses = []
     for doc in documents:
         obj = {}
-        obj['_id'] = str(doc['_id'])
+        obj['id'] = str(doc['_id'])
         obj['user_id'] = str(doc['user_id'])
         obj['category'] = doc['category']
         obj['description'] = doc['description']
@@ -65,11 +66,11 @@ def update_expense():
     if not user:
         return jsonify({"error": "User not found"}), 404
     data = request.get_json()
-    id = data.get('id')
+    id = request.args.get('id')
     category = data.get('category')
     description = data.get('description')
     amount =  data.get('amount')
-
+    print(id)
     if not id or not category or not description or not amount:
         return jsonify({"error":"id, category, description and amount are required"}), 400
     
@@ -81,11 +82,12 @@ def update_expense():
     update_fields['amount'] = amount
     update_fields['timestamp'] = current_timestamp
     print(update_fields, user_id)
-    result = mongo.db.expenses.find_one_and_update({'_id':ObjectId(id),'user_id':user_id},{'$set':update_fields})
+    result = mongo.db.expenses.find_one_and_update({'_id':ObjectId(id),'user_id':user_id},{'$set':update_fields},
+                                                    return_document=ReturnDocument.AFTER,)
     
     if not result:
         return jsonify({"error":"Expense does not exist"}), 404
-    expense_data = {"id":result.get('_id'),"category":result.get('category'),'description':result.get('description'),'amount':result.get('amount'),'timestamp':result.get('timestamp').isoformat()}
+    expense_data = {"id":str(result.get('_id')),"category":result.get('category'),'description':result.get('description'),'amount':result.get('amount'),'timestamp':result.get('timestamp').isoformat()}
     return jsonify({"message":"expense updated", "expense":expense_data}), 200
 
 

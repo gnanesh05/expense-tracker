@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import { useAuth } from '../../contexts/authContext';
 import { useExpense } from '../../contexts/expenseContext';
 import axios from '../../helper/data'
@@ -11,22 +11,43 @@ function AddExpense() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const {state:userState} = useAuth();
-    const {dispatch} = useExpense();
+    const {state:expenseState, dispatch} = useExpense();
+    const isEditing = !!expenseState.selectedExpense;
+
+    useEffect(()=>{
+        if(expenseState.selectedExpense){
+            setForm(expenseState.selectedExpense)
+        }
+    },[expenseState.selectedExpense]);
+
     const handleChange = (name:string, value:string)=>{
-        console.log(name, value)
         setForm((prev)=>({...prev, [name]:value}));
     }
     const handleSubmit = async(e: React.FormEvent)=>{
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await axios.post("/expenses/", form, {
-                headers:{
-                    'Authorization' : `Bearer ${userState.token}`
-                }
-            });
-            dispatch({type:'ADD_EXPENSE', payload:{expense:res.data.expense}});
-            setForm({category:'',description:'',amount:''})
+            if(!isEditing){
+                 const res = await axios.post("/expenses/", form, {
+                    headers:{
+                        'Authorization' : `Bearer ${userState.token}`
+                    }
+                });
+                dispatch({type:'ADD_EXPENSE', payload:{expense:res.data.expense}});
+                setForm({category:'',description:'',amount:''})
+            }
+            else{
+                 const res = await axios.put(`/expenses/?id=${expenseState.selectedExpense?.id}`, form, {
+                    headers:{
+                        'Authorization' : `Bearer ${userState.token}`
+                    }
+                });
+                console.log(res.data.expense)
+                dispatch({type:'UPDATE_EXPENSE', payload:{expense:res.data.expense}});
+                setForm({category:'',description:'',amount:''})
+                dispatch({type:'SET_SELECTED_EXPENSE', payload:{expense:null}})
+            }
+           
         } 
          catch (error:any) {
             setError(error.response.data.error)
@@ -39,12 +60,12 @@ function AddExpense() {
     }
     return (
     <form className="expense-form" onSubmit={handleSubmit} >
-      <h3>Add Transaction</h3>
+      <h3>{isEditing ? "Edit": "Add"} Transaction</h3>
         {error.length>0 && <p className='error'>{error}</p>}
       <label>Category</label>
-      <select name="category"  onChange={(e)=>handleChange(e.target.name, e.target.value)}
+      <select name="category" value={form.category} onChange={(e)=>handleChange(e.target.name, e.target.value)}
         required>
-        <option value="">Select Category</option>
+        <option value=''>Select Category</option>
         {categories.map(cat => (
           <option key={cat} value={cat}>{cat}</option>
         ))}
@@ -71,7 +92,7 @@ function AddExpense() {
       />
 
       <button type="submit">
-        {loading ? 'Adding...' : 'Add'}
+        {loading ? 'Adding...' : isEditing ? "Update": "Add"}
       </button>
     </form>
   );

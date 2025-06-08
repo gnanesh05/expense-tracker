@@ -10,6 +10,6 @@ def create_app():
     app.config.from_object(Config)
     mongo.init_app(app)
     jwt.init_app(app)
-    CORS(app)
+    CORS(app,supports_credentials=True)
     register_routes(app)
     return app

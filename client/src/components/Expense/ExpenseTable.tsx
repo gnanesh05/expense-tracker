@@ -19,7 +19,28 @@ function ExpenseTable() {
             dispatch({type:'FETCH_EXPENSES', payload:{expenses:res.data.expenses}});
         }
         fetchExpenses();
-    },[])
+    },[]);
+
+    const handleEdit = (id:string)=>{
+        const selectedExpense = expenseState.expenses.find((item)=>item.id === id);
+        if(selectedExpense){
+            dispatch({type:'SET_SELECTED_EXPENSE',payload:{expense:selectedExpense}})
+        }
+    }
+
+    const handleDelete = async(id:string)=>{
+        try {
+            await axios.delete(`/expenses/?id=${id}`,{
+                headers:{
+                    'Authorization' : `Bearer ${userState.token}`
+                }
+            });
+            dispatch({type:'REMOVE_EXPENSE', payload:{id:id}});
+        }  catch (error:any) {
+            console.log(error.response.data.error)
+        }
+    }
+
   if (expenseState.expenses.length === 0) {
     return <p className="empty-text">No transactions to show yet.</p>;
   }
@@ -51,8 +72,8 @@ function ExpenseTable() {
               </td>
               <td>{new Date(expense.timestamp).toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</td>
               <td>
-                <button className="edit-btn"><img src={editIcon} alt='edit'/></button>
-                <button className="delete-btn"><img src={deleteIcon} alt='edit'/></button>
+                <button className="edit-btn" onClick={()=>handleEdit(expense.id)} ><img src={editIcon} alt='edit'/></button>
+                <button className="delete-btn" onClick={()=>handleDelete(expense.id)}><img src={deleteIcon} alt='edit'/></button>
               </td>
             </tr>
           ))}
