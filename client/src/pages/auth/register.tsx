@@ -23,7 +23,12 @@ function Register({setLoading}:{setLoading: React.Dispatch<React.SetStateAction<
             showToast('Register Successful!','success')
             navigate('/')
         } catch (error:any) {
-            showToast(error.response.data.error,'error')
+            if(error?.message =='Network Error'){
+                showToast('Connection Failure!','error')
+            }
+            else{
+                showToast(error.response.data.error,'error')
+            }
         }
         finally{
             setLoading(false);

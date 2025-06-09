@@ -23,7 +23,12 @@ function Login({setLoading}:{setLoading: React.Dispatch<React.SetStateAction<boo
             dispatch({type:'LOGIN',payload:{token:res.data.token, user: res.data.user}})
             navigate('/')
         } catch (error:any) {
-            showToast(error.response.data.error,'error')
+            if(error?.message =='Network Error'){
+                showToast('Connection Failure!','error')
+            }
+            else{
+                showToast(error.response.data.error,'error')
+            }
         }
         finally{
             setLoading(false);

@@ -1,5 +1,5 @@
 import React from 'react'
-import './index.css'
+import './Spinner.css'
 import loader from '../../assets/Fading line.gif'
 
 function Spinner({loading}:{loading:boolean}) {

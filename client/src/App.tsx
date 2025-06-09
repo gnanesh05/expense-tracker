@@ -4,16 +4,15 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import './App.css'
 
 import Navbar from './components/navbar/NavBar'
-import Footer from './components/footer'
-import PrivateRoute from './components/PrivateRoute'
+import Footer from './components/footer/Footer'
+import PrivateRoute from './components/PrivateRoute/PrivateRoute'
 import { useAuth } from './contexts/authContext'
 
-const Auth = lazy(()=>import('./pages/auth'));
+const Auth = lazy(()=>import('./pages/auth/Auth'));
 const Dashboard = lazy(()=>import('./pages/Dashboard/Dashboard'))
 
 function App() {
   const {state} = useAuth();
-  console.log(state)
   return (
     <Router>
         <Navbar/>

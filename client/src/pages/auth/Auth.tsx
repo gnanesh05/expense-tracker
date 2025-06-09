@@ -1,9 +1,9 @@
 import React,{useState} from 'react'
-import './index.css'
+import './Auth.css'
 import money from '../../assets/money.jpg'
 import Login from './login'
 import Register from './register';
-import Spinner from '../../components/Spinner';
+import Spinner from '../../components/Spinner/Spinner';
 
 function Auth() {
     const [isLogin, setisLogin] = useState(false);

@@ -25,7 +25,6 @@ export const ToastProvider = ({children}:{children:ReactNode})=>{
             setToasts((prev)=>prev.filter((item:Toast)=>item.id !== id));
         },3000);
     }
-      console.log('ToastProvider mounted');
     return (
         <ToastContext.Provider value={{showToast}}>
             {children}

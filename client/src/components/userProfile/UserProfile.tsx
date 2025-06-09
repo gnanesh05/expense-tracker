@@ -1,5 +1,5 @@
 import React from 'react'
-import './index.css'
+import './UserProfile.css'
 import { useAuth } from '../../contexts/authContext'
 import profile from '../../assets/profile.png'
 
