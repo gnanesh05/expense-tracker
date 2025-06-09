@@ -41,6 +41,7 @@ h1 {
   width: inherit;
   border: 1px solid #ccc;
   border-radius: 10px;
+  color:white;
   font-weight: bold;
   z-index: 1000;
   animation: fadeInOut 3s ease-in-out forwards;
@@ -71,3 +72,6 @@ h1 {
   }
 }
 
+button{
+  font-weight: bold;
+}

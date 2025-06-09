@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/authContext'
 import { useExpense } from '../../contexts/expenseContext'
 import { useToast } from '../../contexts/toastContext'
+import { useSortedExpenses } from '../../custom-hooks/useSortedExpenses'
 import axios from '../../helper/data'
 import editIcon from '../../assets/edit.png'
 import deleteIcon from '../../assets/delete.png'
@@ -12,8 +13,13 @@ function ExpenseTable() {
     const {state:userState, dispatch:userDispatch} = useAuth();
     const {state: expenseState, dispatch} = useExpense();
     const [budget, setBudget] = useState(userState.user?.budget)
+    const [sortField, setSortField] = useState<'category'|'amount'|'timestamp'|null>(null);
+    const [sortOrder, setSortOrder] = useState<'asc'|'desc'>('asc');
     const navigate = useNavigate();
     const {showToast} = useToast();
+
+    const sortedExpenses = useSortedExpenses(expenseState.expenses, sortField, sortOrder);
+
     useEffect(()=>{
         const fetchExpenses = async()=>{
             const res = await axios.get('/expenses/', {
@@ -25,6 +31,16 @@ function ExpenseTable() {
         }
         fetchExpenses();
     },[]);
+
+    const handleSort = (field:'category'|'amount'|'timestamp'|null)=>{
+        if(sortField == field){
+            setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+        }
+        else{
+            setSortField(field);
+            setSortOrder('asc')
+        }
+    }
 
     const handleEdit = (id:string)=>{
         const selectedExpense = expenseState.expenses.find((item)=>item.id === id);
@@ -105,15 +121,15 @@ function ExpenseTable() {
             <table className="expense-table">
                 <thead>
                 <tr>
-                    <th>Category</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                    <th>Time</th>
+                    <th className='expense-table-header' onClick={()=>handleSort('category')}>Category</th>
+                    <th >Description</th>
+                    <th className='expense-table-header' onClick={()=>handleSort('amount')}>Amount</th>
+                    <th className='expense-table-header' onClick={()=>handleSort('timestamp')}>Time</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                {expenseState.expenses.map((expense) => (
+                {sortedExpenses.map((expense) => (
                     <tr key={expense.id}>
                     <td>{expense.category}</td>
                     <td>{expense.description}</td>

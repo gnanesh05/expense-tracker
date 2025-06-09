@@ -69,6 +69,12 @@ function AddExpense() {
         
 
     }
+    const handleCancel = async()=>{
+      if(isEditing){
+        dispatch({type:'SET_SELECTED_EXPENSE', payload:{expense:null}})
+      }
+      setForm({category:'',description:'',amount:''})
+    }
     return (
     <form className="expense-form" onSubmit={handleSubmit} >
       <h3>{isEditing ? "Edit": "Add"} Transaction</h3>
@@ -102,9 +108,13 @@ function AddExpense() {
         required
       />
 
-      <button type="submit">
-        {loading ? 'Adding...' : isEditing ? "Update": "Add"}
-      </button>
+      <div className='btn-grp'>
+        <button type="submit">
+          {loading ? 'Adding...' : isEditing ? "Update": "Add"}
+        </button>
+        <button className='cancel-btn' style={{backgroundColor:'#999'}} onClick={handleCancel}>Cancel</button>
+      </div>
+      
     </form>
   );
 }

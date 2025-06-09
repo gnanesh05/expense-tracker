@@ -33,8 +33,15 @@
   border-color: #0ddcdf;
 }
 
+.btn-grp{
+  display: flex;
+  justify-content: center;
+  gap:1rem;
+}
+
 .expense-form button {
   margin-top: 0.5rem;
+  width: 10rem;
   padding: 0.7rem;
   font-size: 1rem;
   background: #0ddcdf;
@@ -52,4 +59,8 @@
 .expense-form button:disabled {
   background: #999;
   cursor: not-allowed;
+}
+
+.cancel-btn{
+  background-color: #999;
 }
