@@ -8,10 +8,10 @@ function Dashboard() {
   return (
     <ExpenseProvider>
         <div className="expense-dashboard">
-          <div className="form-section">
+          <div className="form-section" data-testid='AddExpense'>
             <AddExpense/>
           </div>
-          <div className="transactions-section">
+          <div className="transactions-section" data-testid='ExpenseTable'>
             <ExpenseTable/>
           </div>
       </div>

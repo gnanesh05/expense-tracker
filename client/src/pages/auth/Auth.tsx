@@ -23,7 +23,7 @@ function Auth() {
                 </section>
             
             </div>
-            <div className="form-container">
+            <div className="form-container" data-testid='form-container'>
                { isLogin ?  <Login setLoading={setIsLoading}/> : <Register setLoading={setIsLoading}/>}
                 <p className='navigator'>
                     {isLogin ? "Don't have an account yet?" : "Already have an account?"}
