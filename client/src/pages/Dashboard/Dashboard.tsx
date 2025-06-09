@@ -1,4 +1,3 @@
-import React from 'react'
 import './Dashboard.css'
 import ExpenseTable from '../../components/Expense/ExpenseTable'
 import { ExpenseProvider } from '../../contexts/expenseContext'

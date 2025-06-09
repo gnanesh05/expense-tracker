@@ -6,7 +6,7 @@ type PrivateRouteProps = {
     loading:Boolean,
 }
 
-const PrivateRoute = ({ isAuthenticated, loading, children }: { isAuthenticated: boolean; loading: boolean; children: JSX.Element }) => {
+const PrivateRoute = ({ isAuthenticated, loading, children }: PrivateRouteProps) => {
     if (loading) return <div>Loading...</div>;
 
     return isAuthenticated ? children : <Navigate to="/auth" />;

@@ -1,10 +1,9 @@
-import React from 'react'
 import './UserProfile.css'
 import { useAuth } from '../../contexts/authContext'
 import profile from '../../assets/profile.png'
 
 function UserProfile() {
-    const {state, dispatch} = useAuth();
+    const {state} = useAuth();
 
   return (
     <div className='user-profile'>

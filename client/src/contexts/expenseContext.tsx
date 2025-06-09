@@ -1,5 +1,4 @@
-import axios from '../helper/data'
-import React ,{useEffect,createContext, ReactNode, useContext, useReducer} from 'react'
+import React ,{createContext, ReactNode, useContext, useReducer} from 'react'
 
 type Expense = {
     id:string,
