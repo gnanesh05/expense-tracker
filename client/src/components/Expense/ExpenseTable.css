@@ -1,25 +1,75 @@
 .transaction-list {
   width: 100%;
-  overflow-x: auto;
+  /* overflow-x: auto; */
 }
 
 .budget-details{
-    display: flex;
-    gap: 10px;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  gap: 3rem;
+  padding: 0.5rem 1rem;
+  background: #f7f7f7;
+  border-radius: 8px;
+  font-weight: 500;
 }
 
-.budget-details h3{
-    
+.budget-details p {
+  margin: 0;
+  font-size: 1rem;
 }
 
+.budget-update {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.budget-update label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.budget-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.budget-controls input {
+  padding: 0.5rem;
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.budget-controls button {
+  padding: 0.5rem 1rem;
+  background-color: #0ddcdf;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.budget-controls button:hover {
+  background-color:  #0ccbce;
+}
+
+.expense-table-wrapper{
+  max-height: 450px;
+  overflow-y: auto;
+}
 .expense-table {
   width: 100%;
   border-collapse: collapse;
   background-color: #fff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 .expense-table th,

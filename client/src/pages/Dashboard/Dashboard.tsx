@@ -1,6 +1,5 @@
 import React from 'react'
 import './Dashboard.css'
-import UserProfile from '../../components/userProfile'
 import ExpenseTable from '../../components/Expense/ExpenseTable'
 import { ExpenseProvider } from '../../contexts/expenseContext'
 import AddExpense from '../../components/Expense/AddExpense'

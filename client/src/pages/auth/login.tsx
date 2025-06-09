@@ -2,11 +2,12 @@ import React,{useState} from 'react';
 import axios from '../../helper/data';
 import { useAuth } from '../../contexts/authContext';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../../contexts/toastContext';
 
 function Login({setLoading}:{setLoading: React.Dispatch<React.SetStateAction<boolean>>}) {
     const[form, setForm] = useState({email:'', password:''});
-    const [error, setError] = useState('');
     const {dispatch}  = useAuth();
+    const {showToast} = useToast();
     const navigate = useNavigate();
 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
@@ -18,11 +19,11 @@ function Login({setLoading}:{setLoading: React.Dispatch<React.SetStateAction<boo
         try {
             setLoading(true);
             const res = await axios.post("/users/login", form);
+            showToast('Login Successful!','success')
             dispatch({type:'LOGIN',payload:{token:res.data.token, user: res.data.user}})
             navigate('/')
-            setError('')
         } catch (error:any) {
-            setError(error.response.data.error)
+            showToast(error.response.data.error,'error')
         }
         finally{
             setLoading(false);
@@ -31,7 +32,6 @@ function Login({setLoading}:{setLoading: React.Dispatch<React.SetStateAction<boo
     return (
         <form className="form-group" onSubmit={handleSubmit}>
             <h2 className='form-header'>Login </h2>
-            {error.length>0 && <p className='error'>{error}</p>}
             <label htmlFor="email">
             Email
             </label>

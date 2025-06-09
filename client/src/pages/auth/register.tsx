@@ -1,13 +1,14 @@
 import React,{useState} from 'react'
 import axios from '../../helper/data'
 import { useAuth } from '../../contexts/authContext';
+import { useToast } from '../../contexts/toastContext';
 import { useNavigate } from 'react-router-dom';
 
 function Register({setLoading}:{setLoading: React.Dispatch<React.SetStateAction<boolean>>}) {
     const[form, setForm] = useState({username:'',email:'', password:''});
-    const [error, setError] = useState('');
     const{dispatch} = useAuth();
     const navigate = useNavigate();
+    const {showToast} = useToast();
 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
         setForm((prev)=>({...prev,[e.target.name]: e.target.value}));
@@ -19,10 +20,10 @@ function Register({setLoading}:{setLoading: React.Dispatch<React.SetStateAction<
             setLoading(true)
             const res = await axios.post("/users/register", form);
             dispatch({type:'LOGIN',payload:{token:res.data.token, user: res.data.user}})
+            showToast('Register Successful!','success')
             navigate('/')
-            setError('')
         } catch (error:any) {
-            setError(error.response.data.error)
+            showToast(error.response.data.error,'error')
         }
         finally{
             setLoading(false);
@@ -31,7 +32,6 @@ function Register({setLoading}:{setLoading: React.Dispatch<React.SetStateAction<
     return (
         <form className="form-group" onSubmit={handleSubmit}>
                 <h2 className='form-header'>Register </h2>
-                {error.length>0 && <p className='error'>{error}</p>}
                 <label htmlFor='username'>
                     User Name
                 </label>

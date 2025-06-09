@@ -1,6 +1,8 @@
 import React,{useState, useEffect} from 'react'
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
 import { useExpense } from '../../contexts/expenseContext';
+import { useToast } from '../../contexts/toastContext';
 import axios from '../../helper/data'
 import './AddExpense.css'
 
@@ -9,9 +11,10 @@ const categories = ['Food', 'Travel', 'Bills', 'Entertainment', 'Groceries', 'Ot
 function AddExpense() {
     const [form, setForm] = useState({category:'',description:'',amount:''});
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
     const {state:userState} = useAuth();
     const {state:expenseState, dispatch} = useExpense();
+    const navigate = useNavigate();
+    const {showToast} = useToast();
     const isEditing = !!expenseState.selectedExpense;
 
     useEffect(()=>{
@@ -25,6 +28,10 @@ function AddExpense() {
     }
     const handleSubmit = async(e: React.FormEvent)=>{
         e.preventDefault();
+        if(parseFloat(form.amount)<1){
+          showToast("Amount must be greater than 0",'error')
+          return;
+        }
         setLoading(true);
         try {
             if(!isEditing){
@@ -34,6 +41,7 @@ function AddExpense() {
                     }
                 });
                 dispatch({type:'ADD_EXPENSE', payload:{expense:res.data.expense}});
+                showToast('Added new transaction!','success');
                 setForm({category:'',description:'',amount:''})
             }
             else{
@@ -42,15 +50,18 @@ function AddExpense() {
                         'Authorization' : `Bearer ${userState.token}`
                     }
                 });
-                console.log(res.data.expense)
                 dispatch({type:'UPDATE_EXPENSE', payload:{expense:res.data.expense}});
+                showToast('Updated transaction!','success');
                 setForm({category:'',description:'',amount:''})
                 dispatch({type:'SET_SELECTED_EXPENSE', payload:{expense:null}})
             }
            
         } 
          catch (error:any) {
-            setError(error.response.data.error)
+             if(error.response.status ==401){
+                navigate('/auth')
+            }
+            showToast(error.response.data.error,'success');
         }
         finally{
             setLoading(false);
@@ -61,7 +72,6 @@ function AddExpense() {
     return (
     <form className="expense-form" onSubmit={handleSubmit} >
       <h3>{isEditing ? "Edit": "Add"} Transaction</h3>
-        {error.length>0 && <p className='error'>{error}</p>}
       <label>Category</label>
       <select name="category" value={form.category} onChange={(e)=>handleChange(e.target.name, e.target.value)}
         required>
@@ -81,10 +91,11 @@ function AddExpense() {
         required
       />
 
-      <label>Amount</label>
+      <label>Amount(Rs)</label>
       <input
         type="number"
         name="amount"
+        min='1'
         placeholder="e.g. 1500"
         value={form.amount}
         onChange={(e)=>handleChange(e.target.name, e.target.value)}

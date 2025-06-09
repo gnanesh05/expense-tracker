@@ -20,7 +20,7 @@ html {
   padding-top: 60px;   /* equal to navbar height */
   padding-bottom: 50px; /* equal to footer height */
   height: calc(100vh - 11rem); /* fill remaining height */
-  overflow-y: auto;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   flex-direction: column;

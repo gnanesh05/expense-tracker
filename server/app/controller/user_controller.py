@@ -75,13 +75,12 @@ def login():
 @jwt_required()
 def update_monthly_budget():
     user_id =  get_jwt_identity() 
-
     user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
     if not user:
         return jsonify({"error": "Not Authorised"}), 401
     
-    budget = request.args.get('budget')
-    print(budget)
+    data = request.get_json()
+    budget = data.get('budget')
     if not budget:
         return jsonify({"error":"Budget not found"}), 400
     

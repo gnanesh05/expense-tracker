@@ -15,7 +15,8 @@ type AuthState={
     loading: boolean;
 }
 
-type Action= {type:'LOGIN', payload:{token:string, user:User}} | {type:'SET_USER',payload:{user:User}}| {type:'LOGOUT'} | { type: 'SET_LOADING', payload: boolean };
+type Action= {type:'LOGIN', payload:{token:string, user:User}} | {type:'SET_USER',payload:{user:User}}|
+ {type:'LOGOUT'} | {type:'UPDATE_BUDGET', payload:{budget:string}}| { type: 'SET_LOADING', payload: boolean };
 
 const intitalState:AuthState = {
     user : null,
@@ -33,6 +34,7 @@ const authReducer = (state:AuthState, action:Action): AuthState =>{
                 user: action.payload.user,
                 token: action.payload.token,
                 isAuthenticated: true,
+                loading: false,
             }
         case 'SET_USER':
             return {
@@ -43,6 +45,15 @@ const authReducer = (state:AuthState, action:Action): AuthState =>{
         case 'LOGOUT':
             localStorage.removeItem('token')
             return intitalState;
+        case 'UPDATE_BUDGET':
+            if (!state.user) return state;
+            return {
+                ...state,
+                user: {
+                ...state.user,
+                budget: action.payload.budget,
+                },
+            };
         case 'SET_LOADING':
             return {
                 ...state,
