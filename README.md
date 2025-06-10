@@ -51,5 +51,18 @@ cd client
 npm install
 npm run dev
 ```
+### Docker setup
+🛠️ Prerequisites
+Docker
+Docker Compose
+
+```bash
+docker-compose up --build
+```
+App will be available at:
+
+Frontend: http://localhost:4000
+
+Backend: http://localhost:5000
 
 Link to live site - https://expense-tracker-peach-zeta.vercel.app/

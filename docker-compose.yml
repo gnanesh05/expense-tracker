@@ -7,7 +7,8 @@ services:
       dockerfile: server/Dockerfile
     ports:
       - "5000:5000"
-    env_file: .env
+    env_file: 
+      - .env
     
     depends_on: []
 
@@ -15,7 +16,11 @@ services:
     build:
       context: .
       dockerfile: client/Dockerfile
+      args:
+        - VITE_PROD_API_URL=${VITE_PROD_API_URL}
     ports:
       - "4000:80"
+    env_file:
+      - .env
     depends_on:
       - server
