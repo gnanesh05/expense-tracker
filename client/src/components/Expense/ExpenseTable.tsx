@@ -68,9 +68,6 @@ function ExpenseTable() {
         }
     }
 
-  if (expenseState.expenses.length === 0) {
-    return <p className="empty-text">No transactions to show yet.</p>;
-  }
 
   const isOverBudget = expenseState.total > parseFloat(userState?.user?.budget??'0')
   const updateBudget = async()=>{
@@ -118,33 +115,38 @@ function ExpenseTable() {
         </div>
      
       <div className="expense-table-wrapper">
-            <table className="expense-table">
-                <thead>
-                <tr>
-                    <th className='expense-table-header' onClick={()=>handleSort('category')}>Category</th>
-                    <th >Description</th>
-                    <th className='expense-table-header' onClick={()=>handleSort('amount')}>Amount</th>
-                    <th className='expense-table-header' onClick={()=>handleSort('timestamp')}>Time</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {sortedExpenses.map((expense) => (
-                    <tr key={expense.id}>
-                    <td>{expense.category}</td>
-                    <td>{expense.description}</td>
-                    <td className='negative'>
-                        ₹{Math.abs(parseFloat(expense.amount))}
-                    </td>
-                    <td>{new Date(expense.timestamp).toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</td>
-                    <td>
-                        <button className="edit-btn" onClick={()=>handleEdit(expense.id)} ><img src={editIcon} alt='edit'/></button>
-                        <button className="delete-btn" onClick={()=>handleDelete(expense.id)}><img src={deleteIcon} alt='edit'/></button>
-                    </td>
+        {
+            expenseState.expenses.length > 0 ? (
+                <table className="expense-table">
+                    <thead>
+                    <tr>
+                        <th className='expense-table-header' onClick={()=>handleSort('category')}>Category</th>
+                        <th >Description</th>
+                        <th className='expense-table-header' onClick={()=>handleSort('amount')}>Amount</th>
+                        <th className='expense-table-header' onClick={()=>handleSort('timestamp')}>Time</th>
+                        <th>Actions</th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {sortedExpenses.map((expense) => (
+                        <tr key={expense.id}>
+                        <td>{expense.category}</td>
+                        <td>{expense.description}</td>
+                        <td className='negative'>
+                            ₹{Math.abs(parseFloat(expense.amount))}
+                        </td>
+                        <td>{new Date(expense.timestamp).toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</td>
+                        <td>
+                            <button className="edit-btn" onClick={()=>handleEdit(expense.id)} ><img src={editIcon} alt='edit'/></button>
+                            <button className="delete-btn" onClick={()=>handleDelete(expense.id)}><img src={deleteIcon} alt='edit'/></button>
+                        </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            ) : (<p className="empty-text">No transactions to show yet.</p>)
+        }
+           
       </div>
     </div>
   );
