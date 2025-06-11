@@ -23,6 +23,7 @@
 @media (max-width: 768px) {
   .expense-dashboard {
     flex-direction: column;
+    gap: 1rem;
   }
 
   .form-section, .transactions-section {

@@ -94,6 +94,11 @@
 cursor: pointer;
 }
 
+.navigator-link:hover{
+  color:#00bcd4;
+  text-decoration: underline;
+}
+
 .error{
     color: red;
     text-align: center;
